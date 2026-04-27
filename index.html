@@ -97,28 +97,33 @@
 
   <!-- LOGIN LOGIC -->
   <script>
-    function login() {
-      const name = document.getElementById("name").value.trim();
-      const pin = document.getElementById("pin").value.trim();
-      const result = document.getElementById("result");
+function login() {
+  const name = document.getElementById("name").value.trim();
+  const pin = document.getElementById("pin").value.trim();
+  const result = document.getElementById("result");
 
-      const user = USERS.find(u =>
-        u.name.toLowerCase() === name.toLowerCase() &&
-        u.pin === pin
-      );
+  const user = USERS.find(u =>
+    u.name.toLowerCase() === name.toLowerCase() &&
+    u.pin === pin
+  );
 
-      if (user) {
-        result.style.color = "lightgreen";
-        result.innerHTML = `
-          <h3>Welcome, ${user.name}</h3>
-          <p>λ: ${user.lambda}</p>
-          <p>ID: ${user.id}</p>
-        `;
-      } else {
-        result.style.color = "red";
-        result.innerText = "Access denied.";
-      }
-    }
+  if (user) {
+    // 💾 STORE USER SESSION
+    localStorage.setItem("schmeck_user", JSON.stringify(user));
+
+    result.style.color = "lightgreen";
+    result.innerText = "Access granted. Redirecting...";
+
+    // ⏩ GO TO DASHBOARD
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 800);
+
+  } else {
+    result.style.color = "red";
+    result.innerText = "Access denied.";
+  }
+}
   </script>
 
 </body>
