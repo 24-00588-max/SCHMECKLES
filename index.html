@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Schmeckles System (λ)</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #1c1c1c;
+      padding: 30px;
+      border-radius: 12px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      margin-bottom: 5px;
+      font-size: 22px;
+    }
+
+    p.subtitle {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      width: 95%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #4caf50;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    #result {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .hint {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Schmeckles (λ)</h1>
+    <p class="subtitle">Class Economy Login System</p>
+
+    <input id="name" placeholder="Student Name">
+    <input id="pin" type="password" placeholder="PIN">
+
+    <button onclick="login()">Login</button>
+
+    <div id="result"></div>
+
+    <div class="hint">
+      Access controlled by λ registry
+    </div>
+  </div>
+
+  <!-- DATABASE -->
+  <script src="database.js"></script>
+
+  <!-- LOGIN LOGIC -->
+  <script>
+    function login() {
+      const name = document.getElementById("name").value.trim();
+      const pin = document.getElementById("pin").value.trim();
+      const result = document.getElementById("result");
+
+      const user = USERS.find(u =>
+        u.name.toLowerCase() === name.toLowerCase() &&
+        u.pin === pin
+      );
+
+      if (user) {
+        result.style.color = "lightgreen";
+        result.innerHTML = `
+          <h3>Welcome, ${user.name}</h3>
+          <p>λ: ${user.lambda}</p>
+          <p>ID: ${user.id}</p>
+        `;
+      } else {
+        result.style.color = "red";
+        result.innerText = "Access denied.";
+      }
+    }
+  </script>
+
+</body>
+</html>
