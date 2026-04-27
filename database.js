@@ -1,4 +1,4 @@
-const USERS = [
+const DEFAULT_USERS = [
   { id: "1001", name: "Alex", pin: "111", lambda: 0 },
   { id: "1002", name: "William", pin: "121", lambda: 0 },
   { id: "1003", name: "Noah", pin: "131", lambda: 0 },
@@ -10,3 +10,38 @@ const USERS = [
   { id: "1009", name: "Sophia", pin: "191", lambda: 0 },
   { id: "1010", name: "Chloe", pin: "201", lambda: 0 }
 ];
+
+// 🧠 INIT DATABASE ONCE
+if (!localStorage.getItem("schmeckles_data")) {
+  localStorage.setItem("schmeckles_data", JSON.stringify(DEFAULT_USERS));
+}
+
+// 📦 GET USERS
+function getUsers() {
+  return JSON.parse(localStorage.getItem("schmeckles_data"));
+}
+
+// 💾 SAVE USERS
+function saveUsers(users) {
+  localStorage.setItem("schmeckles_data", JSON.stringify(users));
+}
+
+// 🔍 FIND USER
+function findUser(name, pin) {
+  return getUsers().find(u =>
+    u.name.toLowerCase() === name.toLowerCase() &&
+    u.pin === pin
+  );
+}
+
+// 🪙 UPDATE λ (NOW PERSISTENT)
+function updateLambda(id, amount) {
+  let users = getUsers();
+
+  const user = users.find(u => u.id === id);
+  if (user) {
+    user.lambda += amount;
+  }
+
+  saveUsers(users);
+}
