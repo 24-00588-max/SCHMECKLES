@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Schmeckles Dashboard (λ)</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f0f0f;
+      color: white;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1c1c1c;
+      padding: 15px 25px;
+      font-size: 14px;
+      border-bottom: 1px solid #333;
+    }
+
+    .metric {
+      text-align: center;
+      flex: 1;
+    }
+
+    .metric span {
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 3px;
+    }
+
+    .earned span { color: #4caf50; }
+    .debt span { color: #ff4d4d; }
+    .total span { color: #4da3ff; }
+
+    /* MAIN CONTAINER */
+    .container {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    /* COLLAPSIBLE SECTION */
+    .section {
+      background: #1c1c1c;
+      border-radius: 10px;
+      margin-top: 15px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 12px;
+      cursor: pointer;
+      background: #222;
+      font-size: 13px;
+    }
+
+    .section-content {
+      display: none;
+      padding: 10px;
+      font-size: 13px;
+      color: #ccc;
+    }
+
+    /* HISTORY */
+    .log {
+      border-bottom: 1px solid #333;
+      padding: 6px 0;
+    }
+
+    .pos { color: #4caf50; }
+    .neg { color: #ff4d4d; }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+
+    <div class="metric earned">
+      Earned
+      <span id="earned">0 λ</span>
+    </div>
+
+    <div class="metric debt">
+      Debt
+      <span id="debt">0 λ</span>
+    </div>
+
+    <div class="metric total">
+      Total
+      <span id="total">0 λ</span>
+    </div>
+
+  </div>
+
+  <div class="container">
+
+    <!-- COLLAPSIBLE STATEMENTS -->
+    <div class="section">
+      <div class="section-header" onclick="toggle(this)">
+        ▼ Statements
+      </div>
+
+      <div class="section-content" id="statements">
+        Loading...
+      </div>
+    </div>
+
+  </div>
+
+  <script src="database.js"></script>
+
+  <script>
+    // TEMP USER (we'll connect login later)
+    const user = USERS[0];
+
+    // MOCK HISTORY (this will later come from log system)
+    const history = [
+      { text: "+5 Quiz Score", value: 5 },
+      { text: "-2 Late Submission", value: -2 },
+      { text: "+3 Participation", value: 3 },
+      { text: "-1 Missing Homework", value: -1 }
+    ];
+
+    // CALCULATE
+    let earned = 0;
+    let debt = 0;
+
+    history.forEach(h => {
+      if (h.value > 0) earned += h.value;
+      else debt += Math.abs(h.value);
+    });
+
+    const total = earned - debt;
+
+    // DISPLAY TOP BAR
+    document.getElementById("earned").innerText = earned + " λ";
+    document.getElementById("debt").innerText = debt + " λ";
+    document.getElementById("total").innerText = total + " λ";
+
+    // STATEMENTS
+    let html = "";
+    history.forEach(h => {
+      const cls = h.value >= 0 ? "pos" : "neg";
+      html += `
+        <div class="log ${cls}">
+          ${h.text}
+        </div>
+      `;
+    });
+
+    document.getElementById("statements").innerHTML = html;
+
+    // COLLAPSE FUNCTION
+    function toggle(el) {
+      const content = el.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+        el.innerText = "▼ Statements";
+      } else {
+        content.style.display = "block";
+        el.innerText = "▲ Statements";
+      }
+    }
+
+    // default open
+    document.getElementById("statements").style.display = "block";
+  </script>
+
+</body>
+</html>
